@@ -6,7 +6,40 @@
           width: 100%;
           background: #fff;
           z-index: 110;
-        }</style><script>window.onload=function(){
-        var child=document.querySelector(".mash");
-        child.parentNode.removeChild(child);
-      }</script><link href=./static/css/app.a2a12d6ce0807c8fedf80c2531f1eb3a.css rel=stylesheet></head><body><div id=app></div><div class=mash></div><script type=text/javascript src=./static/js/manifest.3ad1d5771e9b13dbdad2.js></script><script type=text/javascript src=./static/js/vendor.690af568dc446079a841.js></script><script type=text/javascript src=./static/js/app.26e0e0d305d4ce69755c.js></script></body></html>
+        }</style><script>var cdn='static/iamges/';
+      var initload=[
+        cdn+'head.png',cdn+'loading_bg.jpg',cdn+'loading_phone.png',cdn+"roate1.png",cdn+"roate2.png",cdn+"roate3.png",cdn+"small_gp.png"
+      ];
+      function loader(imgs,callback){
+        var isloader=true;
+        var startPo=0;
+        var imgLength=imgs.length;
+        var loadTimer;
+        function loadImg(startPo){
+          var src=imgs[startPo];
+          var loadAbj=new Image();
+          loadAbj.src=src;
+          loadAbj.onload=function(){
+            startPo++;
+            IfLoadImg(startPo);
+          }
+          loadAbj.onerror=function(){
+            startPo++;
+            IfLoadImg(startPo);
+          }
+        }
+        function IfLoadImg(startPo){
+          if(startPo>=imgLength){
+            callback(true)
+          }else{
+            loadImg(startPo);
+          }
+        } 
+        IfLoadImg(startPo);
+      }
+      loader(initload,function(cp){
+          if(cp){
+            var child=document.querySelector(".mash");
+            child.parentNode.removeChild(child);
+          }
+      })</script><link href=./static/css/app.a2a12d6ce0807c8fedf80c2531f1eb3a.css rel=stylesheet></head><body><div id=app></div><div class=mash></div><script type=text/javascript src=./static/js/manifest.3ad1d5771e9b13dbdad2.js></script><script type=text/javascript src=./static/js/vendor.690af568dc446079a841.js></script><script type=text/javascript src=./static/js/app.c112f41c3365387d2e22.js></script></body></html>
