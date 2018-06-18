@@ -19,3 +19,37 @@ window.extend = function (target, source) {
     }
     return target;
 };
+function canPlayAudioMP3(url,callback){
+    try {
+        var audio = new Audio();
+        audio._play=audio.play;
+        audio.play=function(){
+            this._play();
+            this.onended = function () {
+              this.load();
+              this._play();
+            }
+        }
+        audio.src =url;
+        if(audio.canPlayType('audio/mpeg') == "probably"){
+            callback(audio);
+            return;
+        }
+         
+        //If this event fires, then MP3s can be played
+        audio.addEventListener('canplaythrough', function(e){
+            callback(audio);
+        }, false);
+         
+        //If this is fired, then client can't play MP3s
+        audio.addEventListener('error', function(e){
+            callback(false, this.error)
+        }, false);
+         
+        //Smallest base64-encoded MP3 I could come up with (<0.000001 seconds long)
+        audio.load();
+    }
+    catch(e){
+        callback(false, e);
+    }
+}
