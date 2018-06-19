@@ -11,6 +11,11 @@ window.addEventListener('resize', function () {
       }, 0);
     }
   })
+function GetQueryString(name) {
+     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
+     var r = window.location.search.substr(1).match(reg);
+     if (r!=null) return decodeURIComponent(r[2]); return null;
+}
 window.extend = function (target, source) {
     for (var p in source) {
         if (source.hasOwnProperty(p)) {
@@ -19,37 +24,43 @@ window.extend = function (target, source) {
     }
     return target;
 };
-function canPlayAudioMP3(url,callback){
-    try {
-        var audio = new Audio();
-        audio._play=audio.play;
-        audio.play=function(){
-            this._play();
-            this.onended = function () {
-              this.load();
-              this._play();
-            }
-        }
-        audio.src =url;
-        if(audio.canPlayType('audio/mpeg') == "probably"){
-            callback(audio);
-            return;
-        }
-         
-        //If this event fires, then MP3s can be played
-        audio.addEventListener('canplaythrough', function(e){
-            callback(audio);
-        }, false);
-         
-        //If this is fired, then client can't play MP3s
-        audio.addEventListener('error', function(e){
-            callback(false, this.error)
-        }, false);
-         
-        //Smallest base64-encoded MP3 I could come up with (<0.000001 seconds long)
-        audio.load();
-    }
-    catch(e){
-        callback(false, e);
-    }
+ var userInfo={
+    dj_openID:GetQueryString("dj_openID"),
+    dj_nickname:GetQueryString("dj_nickname")||"我的昵称",
+    dj_headimgurl:GetQueryString("dj_headimgurl"),
+    dj_isBindDJ:GetQueryString("dj_isBindDJ"),
+    dj_province:GetQueryString("dj_province"),
+    dj_misPrefix:GetQueryString("dj_misPrefix")
 }
+function playMusic(url,isplay){
+  var audio = new Audio();
+  audio.src =url;
+  if(isplay){
+    audioAutoPlay();
+     document.addEventListener("click",function(){
+      if(audio.paused){
+          playCycle();
+      }
+    });
+  }else{
+    audio.load();
+  }
+  function audioAutoPlay() {
+    playCycle();
+    document.addEventListener("WeixinJSBridgeReady", function () {
+      playCycle();
+    }, false);
+  }
+  function playCycle(){
+    audio.load();
+    audio.play();
+    audio.onended = function () {
+            audio.load();
+            audio.play();
+    }
+  }
+  return audio;
+}
+var audiobg1=playMusic("./static/bg1.mp3",true);
+var msg=playMusic("./static/msg.mp3");
+var audiobg2=playMusic("./static/bg2.mp3");
