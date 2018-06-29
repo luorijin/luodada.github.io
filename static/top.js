@@ -24,26 +24,35 @@ window.extend = function (target, source) {
     }
     return target;
 };
- var userInfo={
-    dj_openID:GetQueryString("dj_openID"),
-    dj_nickname:GetQueryString("dj_nickname")||"我的昵称",
-    dj_headimgurl:GetQueryString("dj_headimgurl"),
-    dj_isBindDJ:GetQueryString("dj_isBindDJ"),
+var userInfo={
+    dj_openID:GetQueryString("dj_openID")||"cesiopenID2222",
+    dj_nickname:GetQueryString("dj_nickname")||"我",
+    dj_headimgurl:GetQueryString("dj_headimgurl")||'./static/images/chat_hfx.png',
+    dj_isBindDJ:GetQueryString("dj_isBindDJ")||0,
     dj_province:GetQueryString("dj_province"),
-    dj_misPrefix:GetQueryString("dj_misPrefix")
+    dj_misPrefix:GetQueryString("dj_misPrefix"),
+    dj_isSubscribe:GetQueryString("dj_isSubscribe")||0,
+    source:GetQueryString("type")
 }
+var defauleData={
+  openid:userInfo.dj_openID,
+  type:1,
+  nickName:userInfo.dj_nickname,
+  isBindDj:parseInt(userInfo.dj_isBindDJ),
+  province:userInfo.dj_province,
+  misPrefix:userInfo.dj_misPrefix,
+  source:userInfo.source,
+  isFollow:parseInt(userInfo.dj_isSubscribe)
+};
 function playMusic(url,isplay){
   var audio = new Audio();
   audio.src =url;
   if(isplay){
     audioAutoPlay();
-     document.addEventListener("click",function(){
-      if(audio.paused){
-          playCycle();
-      }
-    });
   }else{
-    audio.load();
+     document.addEventListener("WeixinJSBridgeReady", function () {
+        audio.load();
+     })
   }
   function audioAutoPlay() {
     playCycle();
@@ -52,15 +61,16 @@ function playMusic(url,isplay){
     }, false);
   }
   function playCycle(){
-    audio.load();
-    audio.play();
+    if(audio.paused){
+      audio.load();
+      audio.play();
+    }
     audio.onended = function () {
-            audio.load();
-            audio.play();
+      audio.play();
     }
   }
   return audio;
 }
-var audiobg1=playMusic("./static/bg1.mp3",true);
+var audiobg1=playMusic("./static/bg.mp3",true);
 var msg=playMusic("./static/msg.mp3");
-var audiobg2=playMusic("./static/bg2.mp3");
+var typed=playMusic("./static/typed.mp3");
