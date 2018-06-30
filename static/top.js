@@ -69,6 +69,7 @@ function playMusic(url,isplay){
       audio.play();
     }
   }
+  audio.playCycle=playCycle;
   return audio;
 }
 var audiobg1=playMusic("./static/bg.mp3",true);
